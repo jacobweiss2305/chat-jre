@@ -1,0 +1,6 @@
+openai
+pinecone-client
+python-dotenv
+pytube
+moviepy
+google-api-python-client

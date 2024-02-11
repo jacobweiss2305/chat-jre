@@ -1,4 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# audio file
+*.mp3
+*.mp4
+
+
 notebooks/
 venv/
 # dependencies
