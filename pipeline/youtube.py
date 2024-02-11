@@ -22,7 +22,7 @@ api_key = os.getenv('YOUTUBE_API_KEY')
 youtube = build('youtube', 'v3', developerKey=api_key)
 
 def download_video(url, target_path="."):
-    yt = YouTube(url)
+    yt = YouTube(url, use_oauth=True, allow_oauth_cache=True)
     video_stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
     filename = video_stream.default_filename
     video_stream.download(output_path=target_path, filename=filename)

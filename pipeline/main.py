@@ -2,6 +2,7 @@ import spotify
 import youtube
 import pinecone
 import vectordb
+import pytube
 import os
 import sys
 import logging
@@ -25,17 +26,18 @@ def main():
         
     # Upload videos to Pinecone
     namespace  = "youtube"
-    for video in tqdm(videos):
-        print(video['videoId'])
+    for video in tqdm(videos[17:]):
+        
+            # Raises AgeRestrictedError
         download_path = youtube.download_video(f"https://www.youtube.com/watch?v={video['videoId']}")
+
+        
         audio_path = youtube.extract_audio(download_path)
         transcript = youtube.transcribe_audio(audio_path)
         embedding = vectordb.get_openai_embedding(transcript)
         video['text'] = transcript
 
         vectordb.upload_pinecone(index_name, embedding, video, namespace)
-        logging.info(f"Uploaded {video['title']} to Pinecone")
-    
 
     # Spotify
     client_id = os.getenv('SPOTIFY_CLIENT_ID')

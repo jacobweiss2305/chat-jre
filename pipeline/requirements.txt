@@ -1,6 +1,6 @@
 openai
 pinecone-client
 python-dotenv
-pytube
+pytube==12.0.0
 moviepy
 google-api-python-client

@@ -22,18 +22,27 @@ export async function POST(req: Request) {
 
     const lastMessage = messages[messages.length - 1]
 
-    const context = await getContext(lastMessage.content, '')
+    const transcript  = await getContext(lastMessage.content, 'youtube')
+
+    const spotify_description = await getContext(lastMessage.content, 'spotify')
 
     const prompt = [
         {
             role: 'system',
-        content: `You have been hired by ${companyName} to be a helpful assistant.
-        Help the user by answering their questions about ${companyName} application.
-        Do not rely on prior knowledge. Only give your expertise if asked for.
-        Do not answer questions that are unrelated.
-    START CONTEXT BLOCK
-    ${context}
-    END OF CONTEXT BLOCK
+        content: `You have been hired by ${companyName} podcast to be a helpful assistant.
+        Help the user by answering their questions about ${companyName} podcast.
+        Do not rely on prior knowledge, and only give your expertise if asked for.
+
+        Use the podcast transcript and metadata to answer the user's questions.
+
+        START SPOTIFY METADATA:
+        ${spotify_description}
+        END OF SPOTIFY METADATA
+    
+        START TRANSCRIPT:
+        ${transcript}
+        END OF TRANSCRIPT
+
     `,
         },
     ]

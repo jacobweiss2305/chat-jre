@@ -1,4 +1,0 @@
-llama-index
-pinecone-client
-python-dotenv
-zenpy
