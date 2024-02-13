@@ -56,7 +56,7 @@ export function Header() {
                 </React.Suspense>
             </div>
             <div className="flex items-center justify-end space-x-2">
-                <Image src="/company_logo.png" alt="Button Image" width={125} height={125} layout="intrinsic" />
+                <Image src="/company_logo.png" alt="Button Image" width={90} height={90} layout="intrinsic" />
             </div>
         </header>
     )

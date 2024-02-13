@@ -8,17 +8,13 @@ const companyName = process.env.COMPANY_NAME;
 
 const exampleMessages = [
   {
-    heading: 'List the steps to add time entry',
-    message: `List the steps to add time entry`
+    heading: 'Tell me about the UFO episode',
+    message: `Tell me about the UFO episode`
   },
   {
-    heading: 'How do I assign timekeeper access?',
-    message: 'How do I assign timekeeper access?'
+    heading: 'What happened on the marijuana psychosis episode?',
+    message: 'What happened on the marijuana psychosis episode?'
   },
-  {
-    heading: 'How do I configure time and cost entry rules?',
-    message: `How do I configure time and cost entry rules?`
-  }
 ]
 
 export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
