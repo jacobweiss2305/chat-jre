@@ -40,22 +40,25 @@ def main():
 
     for video in tqdm(videos):
         # Save video JSON to videos folder
-        video_title = sanitize_filename(video['title']).replace(" ", "_")
-        video_filename = os.path.join(videos_folder, f"{video_title}.json")
-        if not os.path.exists(video_filename):
-            download_path = youtube.download_video(f"https://www.youtube.com/watch?v={video['videoId']}")
+        try:
+            video_title = sanitize_filename(video['title']).replace(" ", "_")
+            video_filename = os.path.join(videos_folder, f"{video_title}.json")
+            if not os.path.exists(video_filename):
+                download_path = youtube.download_video(f"https://www.youtube.com/watch?v={video['videoId']}")
 
-            audio_path = youtube.extract_audio(download_path)
-            transcript = youtube.transcribe_audio(audio_path)
-            embedding = vectordb.get_openai_embedding(transcript)
-            video['text'] = transcript
+                audio_path = youtube.extract_audio(download_path)
+                transcript = youtube.transcribe_audio(audio_path)
+                embedding = vectordb.get_openai_embedding(transcript)
+                video['text'] = transcript
 
-            # Upload data to Pinecone
-            vectordb.upload_pinecone(index_name, embedding, video, namespace)
+                # Upload data to Pinecone
+                vectordb.upload_pinecone(index_name, embedding, video, namespace)
 
-            # Save the video dictionary as a JSON file
-            with open(video_filename, 'w') as f:
-                json.dump(video, f, indent=4)
+                # Save the video dictionary as a JSON file
+                with open(video_filename, 'w') as f:
+                    json.dump(video, f, indent=4)
+        except Exception as e:
+            print(f"Error processing video {video['title']}: {e}")
 
             # Optionally, you might want to delete the downloaded and processed files to save space
             # os.remove(download_path)
