@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const title_description  = await getContext(lastMessage.content, 'youtube', 3000, 0.7, false)
 
-    const spotify_description = await getContext(lastMessage.content, 'spotify')
+    // const spotify_description = await getContext(lastMessage.content, 'spotify')
 
     const prompt = [
         {
@@ -36,10 +36,6 @@ export async function POST(req: Request) {
         Do not rely on prior knowledge, and only give your expertise if asked for.
 
         Use the podcast transcript and metadata to answer the user's questions.
-
-        START SPOTIFY METADATA:
-        ${spotify_description}
-        END OF SPOTIFY METADATA
 
         START YOUTUBE METADATA:
         ${title_description}
