@@ -57,7 +57,7 @@ export function Header() {
             </div>
             {/* Catchy Title */}
             <h1 className="text-xl md:text-2xl font-bold text-center flex-grow">
-                Joe Rogan Experience Chatbot
+                Joe Rogan Experience Chatbot [Beta]
             </h1>
             {/* Logo and other elements */}
             <div className="flex-1 flex items-center justify-end space-x-2">
