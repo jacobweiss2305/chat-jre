@@ -8,6 +8,8 @@ export type Match = {
     sparseValues: any;
     metadata: {
         text: string;
+        description: string;
+        title: string;
     };
 }
 
@@ -20,8 +22,13 @@ export const getContext = async (message: string, namespace: string, maxTokens =
     const matches = await getMatchesFromEmbeddings(embedding, 10, namespace);
     // Filter and extract as before
     const docs = matches.map(m => m.metadata?.text ?? "Unfortunately, no relevant context was found for this message.");
+    const desc = matches.map(m => m.metadata?.description ?? "Unfortunately, no relevant context was found for this message.");
+    const title = matches.map(m => m.metadata?.title ?? "Unfortunately, no relevant context was found for this message.");
 
     let relevantContext = docs.join("\n");
+    if (!getOnlyText) {
+        relevantContext = title.join("\n") + "\n" + desc.join("\n");
+    }
     if (relevantContext.length > maxTokens) {
         relevantContext = relevantContext.substring(0, maxTokens);
     }

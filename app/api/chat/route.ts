@@ -24,6 +24,8 @@ export async function POST(req: Request) {
 
     const transcript  = await getContext(lastMessage.content, 'youtube')
 
+    const title_description  = await getContext(lastMessage.content, 'youtube', 3000, 0.7, false)
+
     const spotify_description = await getContext(lastMessage.content, 'spotify')
 
     const prompt = [
@@ -38,10 +40,14 @@ export async function POST(req: Request) {
         START SPOTIFY METADATA:
         ${spotify_description}
         END OF SPOTIFY METADATA
+
+        START YOUTUBE METADATA:
+        ${title_description}
+        END OF YOUTUBE METADATA
     
-        START TRANSCRIPT:
+        START YOUTUBE TRANSCRIPT:
         ${transcript}
-        END OF TRANSCRIPT
+        END OF YOUTUBE TRANSCRIPT
 
     `,
         },

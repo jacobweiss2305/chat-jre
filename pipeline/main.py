@@ -6,10 +6,17 @@ import pytube
 import os
 import sys
 import logging
+import json
 from tqdm import tqdm
+import re
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+
+
+def sanitize_filename(filename):
+    # Replace any character not allowed in Windows filenames with an underscore
+    return re.sub(r'[\\/*?:"<>|]', '_', filename)
 
 def main():
 
@@ -25,20 +32,35 @@ def main():
         vectordb.create_index(index_name)
         
     # Upload videos to Pinecone
-    namespace  = "youtube"
-    for video in tqdm(videos[17:]):
+
+    namespace = "youtube"
+    videos_folder = "videos"
+    if not os.path.exists(videos_folder):
+        os.makedirs(videos_folder)
+
+    for video in tqdm(videos):
+        # Save video JSON to videos folder
+        video_title = sanitize_filename(video['title']).replace(" ", "_")
+        video_filename = os.path.join(videos_folder, f"{video_title}.json")
+        if not os.path.exists(video_filename):
+            download_path = youtube.download_video(f"https://www.youtube.com/watch?v={video['videoId']}")
+
+            audio_path = youtube.extract_audio(download_path)
+            transcript = youtube.transcribe_audio(audio_path)
+            embedding = vectordb.get_openai_embedding(transcript)
+            video['text'] = transcript
+
+            # Upload data to Pinecone
+            vectordb.upload_pinecone(index_name, embedding, video, namespace)
+
+            # Save the video dictionary as a JSON file
+            with open(video_filename, 'w') as f:
+                json.dump(video, f, indent=4)
+
+            # Optionally, you might want to delete the downloaded and processed files to save space
+            # os.remove(download_path)
+            # os.remove(audio_path)
         
-            # Raises AgeRestrictedError
-        download_path = youtube.download_video(f"https://www.youtube.com/watch?v={video['videoId']}")
-
-        
-        audio_path = youtube.extract_audio(download_path)
-        transcript = youtube.transcribe_audio(audio_path)
-        embedding = vectordb.get_openai_embedding(transcript)
-        video['text'] = transcript
-
-        vectordb.upload_pinecone(index_name, embedding, video, namespace)
-
     # Spotify
     client_id = os.getenv('SPOTIFY_CLIENT_ID')
     client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
